@@ -15,7 +15,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import main.Setup;
 
-class ShopPageTest {
+class ItemPageTest {
 
 	private static WebDriver webDriver;
 	private static WebDriverWait wait;
@@ -46,7 +46,7 @@ class ShopPageTest {
 
 	@Test
 	void test() throws InterruptedException {
-
+		
 	}
 
 }

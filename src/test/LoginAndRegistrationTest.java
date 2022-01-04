@@ -1,7 +1,5 @@
 package test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import java.time.Duration;
 
 import org.junit.jupiter.api.AfterAll;
@@ -15,7 +13,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import main.Setup;
 
-class AccountPageTest {
+class LoginAndRegistrationTest {
 
 	private static WebDriver webDriver;
 	private static WebDriverWait wait;
@@ -37,6 +35,7 @@ class AccountPageTest {
 
 	@BeforeEach
 	void setUp() throws Exception {
+		setup.startApplication();
 	}
 
 	@AfterEach
@@ -45,7 +44,7 @@ class AccountPageTest {
 
 	@Test
 	void test() throws InterruptedException {
-		setup.startApplication();
+		
 	}
 
 }

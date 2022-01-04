@@ -37,6 +37,7 @@ class HomePageTest {
 
 	@BeforeEach
 	void setUp() throws Exception {
+		setup.startApplication();
 	}
 
 	@AfterEach
@@ -45,7 +46,7 @@ class HomePageTest {
 
 	@Test
 	void test() throws InterruptedException {
-		setup.startApplication();
+
 	}
 
 }

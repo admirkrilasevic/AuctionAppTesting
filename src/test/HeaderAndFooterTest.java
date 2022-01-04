@@ -40,6 +40,7 @@ class HeaderAndFooterTest {
 
 	@BeforeEach
 	void setUp() throws Exception {
+		setup.startApplication();
 	}
 
 	@AfterEach
@@ -48,7 +49,7 @@ class HeaderAndFooterTest {
 
 	@Test
 	void test() throws InterruptedException {
-		setup.startApplication();
+		
 	}
 
 }

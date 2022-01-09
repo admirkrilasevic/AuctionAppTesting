@@ -18,8 +18,8 @@ public class Setup {
 	
 	//App server needs to be started, before working with the app itself
 	public void startApplication() {
-		webDriver.get("https://auction-app-abh-server.herokuapp.com");
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/h1")));
+		//webDriver.get("https://auction-app-abh-server.herokuapp.com");
+		//wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/h1")));
 		webDriver.get("https://auctionapp.krilasevic.me");
 	}
 

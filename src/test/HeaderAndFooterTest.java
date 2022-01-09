@@ -26,7 +26,7 @@ class HeaderAndFooterTest {
 
 	@BeforeAll
 	static void setUpBeforeClass() throws Exception {
-		System.setProperty("webdriver.chrome.driver", "C:\\Users\\yoga\\OneDrive\\Software Verification Validation and Testing\\chromedriver.exe");
+		System.setProperty("webdriver.chrome.driver", "chromedriver.exe");
 		webDriver = new ChromeDriver();
 		webDriver.manage().window().maximize();
 		wait = new WebDriverWait(webDriver, Duration.ofSeconds(10));
@@ -48,7 +48,12 @@ class HeaderAndFooterTest {
 	}
 
 	@Test
-	void test() throws InterruptedException {
+	void testHomeButton() throws InterruptedException {
+		WebElement home = webDriver.findElement(By.xpath("//*[@id=\"root\"]/div/div[2]/div/div[3]/a[1]"));
+		home.click();
+		String urlToCheck = "https://auctionapp.krilasevic.me/home";
+		assertEquals("https://auctionapp.krilasevic.me/home", urlToCheck);
+		Thread.sleep(2000);
 		
 	}
 

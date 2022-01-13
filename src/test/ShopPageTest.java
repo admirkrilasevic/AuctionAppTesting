@@ -2,6 +2,7 @@ package test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.text.DecimalFormat;
 import java.time.Duration;
 import java.util.List;
 
@@ -15,6 +16,8 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import main.Setup;
@@ -106,6 +109,77 @@ class ShopPageTest {
 		
 		assertThrows(NoSuchElementException.class, 
 				() -> {webDriver.findElement(By.xpath("//*[@id=\"root\"]/div/div[3]/div/div/div[2]/div[1]/div/div/p"));});
+	}
+	
+	@Test
+	void testPriceFilter() throws InterruptedException {
+		openShopPage();
+		selectPrices();
+        
+		WebElement minPriceFilterInput = webDriver.findElement(By.className("PriceMenu_minPriceInput__2GC2p"));
+		WebElement maxPriceFilterInput = webDriver.findElement(By.className("PriceMenu_maxPriceInput__2RsAW"));
+		double minPrice = Double.parseDouble(minPriceFilterInput.getAttribute("value"));
+		double maxPrice = Double.parseDouble(maxPriceFilterInput.getAttribute("value"));
+		
+		WebElement priceRange = webDriver.findElement(By.className("PriceMenu_priceRange__3eMWN"));
+		String expectedPriceRange = "$" + minPrice + "-$" + maxPrice;
+		assertEquals(expectedPriceRange, priceRange.getText());
+		
+		WebElement averagePrice = webDriver.findElement(By.className("PriceMenu_priceAverage__1lTg9"));
+		double avgPriceDouble = ((minPrice + maxPrice) / 2);
+		DecimalFormat decimalFormat = new DecimalFormat("0.00");
+		String avgPrice = "The average price is $" + decimalFormat.format(avgPriceDouble);
+		assertEquals(avgPrice, averagePrice.getText());
+		
+		WebElement priceActiveFilter = webDriver.findElement(By.xpath("/html/body/div/div/div[3]/div/div/div[2]/div[1]/div/div/button"));
+		String priceFilterValue = priceActiveFilter.getText().split(" ")[0];
+		assertEquals(expectedPriceRange, priceFilterValue);
+		
+		Select sortOptions = new Select(webDriver.findElement(By.className("ShopPageItems_sortDropdown__2zRR6")));
+		sortOptions.selectByVisibleText("Price: Low to High");
+		
+		Thread.sleep(2000);
+		List<WebElement> listedItems = webDriver.findElements(By.className("Item_itemContainer__uYG6J"));
+		listedItems.get(0).click();
+		Thread.sleep(2000);
+		WebElement startingPrice = webDriver.findElement(By.xpath("//*[@id=\"root\"]/div/div[3]/div[2]/div/div/div[2]/p/span"));
+		assertTrue(Double.parseDouble(startingPrice.getText().substring(1)) >= minPrice);
+		
+		webDriver.navigate().back();
+		Thread.sleep(2000);
+		
+		selectPrices();
+		maxPriceFilterInput = webDriver.findElement(By.className("PriceMenu_maxPriceInput__2RsAW"));
+		maxPrice = Double.parseDouble(maxPriceFilterInput.getAttribute("value"));
+		
+		sortOptions = new Select(webDriver.findElement(By.className("ShopPageItems_sortDropdown__2zRR6")));
+		sortOptions.selectByVisibleText("Price: Low to High");
+		Thread.sleep(2000);
+		
+		listedItems = webDriver.findElements(By.className("Item_itemContainer__uYG6J"));
+		listedItems.get(listedItems.size()-1).click();
+		Thread.sleep(2000);
+		startingPrice = webDriver.findElement(By.xpath("//*[@id=\"root\"]/div/div[3]/div[2]/div/div/div[2]/p/span"));
+		assertTrue(Double.parseDouble(startingPrice.getText().substring(1)) <= maxPrice);
+		
+	}
+	
+	void selectPrices() {
+		WebElement minPriceSlider = webDriver.findElement(By.xpath("//*[@id=\"root\"]/div/div[3]/div/div/div[1]/div[2]/span/span[3]"));
+		Actions moveMinSlider = new Actions(webDriver);
+        moveMinSlider
+	        .moveToElement(minPriceSlider)
+	        .clickAndHold(minPriceSlider)
+	        .moveByOffset(10, 0)
+	        .release().perform();
+        
+		WebElement maxPriceSlider = webDriver.findElement(By.xpath("//*[@id=\"root\"]/div/div[3]/div/div/div[1]/div[2]/span/span[4]"));
+		Actions moveMaxSlider = new Actions(webDriver);
+        moveMaxSlider
+	        .moveToElement(maxPriceSlider)
+	        .clickAndHold(maxPriceSlider)
+	        .moveByOffset(-150, 0)
+	        .release().perform();
 	}
 	
 	void openShopPage() throws InterruptedException {

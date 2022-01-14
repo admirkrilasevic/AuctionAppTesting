@@ -138,30 +138,16 @@ class ShopPageTest {
 		
 		Select sortOptions = new Select(webDriver.findElement(By.className("ShopPageItems_sortDropdown__2zRR6")));
 		sortOptions.selectByVisibleText("Price: Low to High");
-		
 		Thread.sleep(2000);
+		
 		List<WebElement> listedItems = webDriver.findElements(By.className("Item_itemContainer__uYG6J"));
-		listedItems.get(0).click();
-		Thread.sleep(2000);
-		WebElement startingPrice = webDriver.findElement(By.xpath("//*[@id=\"root\"]/div/div[3]/div[2]/div/div/div[2]/p/span"));
-		assertTrue(Double.parseDouble(startingPrice.getText().substring(1)) >= minPrice);
+		WebElement startingPriceContainerFirst = listedItems.get(0).findElement(By.className("Item_startPrice__1QWpu"));
+		WebElement startingPriceContainerLast = listedItems.get(listedItems.size()-1).findElement(By.className("Item_startPrice__1QWpu"));
+		Double startingPriceFirst = Double.parseDouble(startingPriceContainerFirst.getText().substring(12));
+		Double startingPriceLast = Double.parseDouble(startingPriceContainerLast.getText().substring(12));
 		
-		webDriver.navigate().back();
-		Thread.sleep(2000);
-		
-		selectPrices();
-		maxPriceFilterInput = webDriver.findElement(By.className("PriceMenu_maxPriceInput__2RsAW"));
-		maxPrice = Double.parseDouble(maxPriceFilterInput.getAttribute("value"));
-		
-		sortOptions = new Select(webDriver.findElement(By.className("ShopPageItems_sortDropdown__2zRR6")));
-		sortOptions.selectByVisibleText("Price: Low to High");
-		Thread.sleep(2000);
-		
-		listedItems = webDriver.findElements(By.className("Item_itemContainer__uYG6J"));
-		listedItems.get(listedItems.size()-1).click();
-		Thread.sleep(2000);
-		startingPrice = webDriver.findElement(By.xpath("//*[@id=\"root\"]/div/div[3]/div[2]/div/div/div[2]/p/span"));
-		assertTrue(Double.parseDouble(startingPrice.getText().substring(1)) <= maxPrice);
+		assertTrue(startingPriceFirst >= minPrice);
+		assertTrue(startingPriceLast <= maxPrice);
 	}
 	
 	@Test
@@ -211,6 +197,100 @@ class ShopPageTest {
 		
 		assertThrows(NoSuchElementException.class, 
 				() -> {webDriver.findElement(By.xpath("//*[@id=\"root\"]/div/div[3]/div/div/div[2]/div[1]/div/div/p"));});
+	}
+	
+	@Test
+	void testMultipleFiltersAndSorting() throws InterruptedException {
+		openShopPage();
+		selectMultipleFilters();
+		
+		String[] names = new String[3];
+		List<WebElement> listedItems = webDriver.findElements(By.className("Item_itemContainer__uYG6J"));
+		for (int i = 0; i < 3; i++) {
+			WebElement item = listedItems.get(i);
+			WebElement nameContainer = item.findElement(By.className("Item_title__3so5b"));
+			names[i] = nameContainer.getText();
+		}
+		
+		assertTrue(names[0].compareTo(names[1]) < 0);
+		assertTrue(names[1].compareTo(names[2]) < 0);
+		
+		Select sortOptions = new Select(webDriver.findElement(By.className("ShopPageItems_sortDropdown__2zRR6")));
+		sortOptions.selectByVisibleText("Price: Low to High");
+		Thread.sleep(2000);
+		
+		Double[] prices = new Double[3];
+		listedItems = webDriver.findElements(By.className("Item_itemContainer__uYG6J"));
+		for (int i = 0; i < 3; i++) {
+			WebElement item = listedItems.get(i);
+			WebElement startingPriceContainer = item.findElement(By.className("Item_startPrice__1QWpu"));
+			prices[i] = Double.parseDouble(startingPriceContainer.getText().substring(12));
+		}
+		
+		assertTrue(prices[0] < prices[1]);
+		assertTrue(prices[1] < prices[2]);
+		
+		sortOptions.selectByVisibleText("Price: High to Low");
+		Thread.sleep(2000);
+		
+		prices = new Double[3];
+		listedItems = webDriver.findElements(By.className("Item_itemContainer__uYG6J"));
+		for (int i = 0; i < 3; i++) {
+			WebElement item = listedItems.get(i);
+			WebElement startingPriceContainer = item.findElement(By.className("Item_startPrice__1QWpu"));
+			prices[i] = Double.parseDouble(startingPriceContainer.getText().substring(12));
+		}
+		
+		assertTrue(prices[0] > prices[1]);
+		assertTrue(prices[1] > prices[2]);
+	}
+	
+	@Test
+	void testMultipleFiltersAndGridListSwitching() throws InterruptedException {
+		openShopPage();
+		selectMultipleFilters();
+		
+		List<WebElement> listedItemsGridView = webDriver.findElements(By.className("Item_itemContainer__uYG6J"));
+		WebElement firstItemGridView = listedItemsGridView.get(0);
+		WebElement secondItemGridView = listedItemsGridView.get(1);
+		String firstItemGridViewName = firstItemGridView.findElement(By.className("Item_title__3so5b")).getText();
+		String secondItemGridViewName = secondItemGridView.findElement(By.className("Item_title__3so5b")).getText();
+		
+		WebElement gridViewButton = webDriver.findElement(By.xpath("//*[@id=\"root\"]/div/div[3]/div/div/div[2]/div[2]/div/button[1]"));
+		WebElement listViewButton = webDriver.findElement(By.xpath("//*[@id=\"root\"]/div/div[3]/div/div/div[2]/div[2]/div/button[2]"));
+		
+		assertEquals("ShopPageItems_gridListButtonActive__26AAN", gridViewButton.getAttribute("class"));
+		
+		listViewButton.click();
+		assertEquals("ShopPageItems_gridListButtonActive__26AAN", listViewButton.getAttribute("class"));
+		
+		List<WebElement> listedItemsListView = webDriver.findElements(By.className("ListItem_itemContainer__2s8p_"));
+		WebElement firstItemListView = listedItemsListView.get(0);
+		WebElement secondItemListView = listedItemsListView.get(1);
+		String firstItemListViewName = firstItemListView.findElement(By.className("ListItem_title__1l8Nk")).getText();
+		String secondItemListViewName = secondItemListView.findElement(By.className("ListItem_title__1l8Nk")).getText();
+		
+		assertEquals(firstItemGridViewName, firstItemListViewName);
+		assertEquals(secondItemGridViewName, secondItemListViewName);
+		
+	}
+	
+	void selectMultipleFilters() throws InterruptedException {
+		List<WebElement> categories = webDriver.findElements(By.className("Category_collapsibleCategory__3wERX"));
+		categories.get(0).click();
+		categories.get(1).click();
+		
+		WebElement subcategory = webDriver.findElement(By.className("Subcategory_subcategoryItem__1tROv"));
+		WebElement subcategoryCheckbox = subcategory.findElement(By.tagName("input"));
+		subcategoryCheckbox.click();
+		
+		JavascriptExecutor js = (JavascriptExecutor) webDriver;
+		js.executeScript("window.scrollBy(0,300)", "");
+		Thread.sleep(2000);
+		
+		selectPrices();
+		js.executeScript("window.scrollBy(0,-300)", "");
+		Thread.sleep(2000);
 	}
 	
 	void selectPrices() {

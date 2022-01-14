@@ -84,6 +84,23 @@ class HomePageTest {
 	}
 	
 	@Test
+	void testTabSwitching() {
+		WebElement newArrivalsTab = webDriver.findElement(By.xpath("//*[@id=\"root\"]/div/div[3]/div[2]/div/ol/li[1]"));
+		WebElement lastChanceTab = webDriver.findElement(By.xpath("//*[@id=\"root\"]/div/div[3]/div[2]/div/ol/li[2]"));
+		
+		assertEquals("tab-list-item tab-list-active", newArrivalsTab.getAttribute("class"));
+		
+		lastChanceTab.click();
+		lastChanceTab = webDriver.findElement(By.xpath("//*[@id=\"root\"]/div/div[3]/div[2]/div/ol/li[2]"));
+		assertEquals("tab-list-item tab-list-active", lastChanceTab.getAttribute("class"));
+		
+		newArrivalsTab.click();
+		newArrivalsTab = webDriver.findElement(By.xpath("//*[@id=\"root\"]/div/div[3]/div[2]/div/ol/li[1]"));
+		assertEquals("tab-list-item tab-list-active", newArrivalsTab.getAttribute("class"));
+		
+	}
+	
+	@Test
 	void testNewArrivals() throws InterruptedException {
 		int[] hoursLeft = new int[3];
 		WebElement timeLeftForItem;

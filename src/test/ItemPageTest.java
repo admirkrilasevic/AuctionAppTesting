@@ -8,7 +8,6 @@ import java.util.List;
 
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
-import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -29,6 +28,7 @@ class ItemPageTest {
 		webDriver.manage().window().maximize();
 		wait = new WebDriverWait(webDriver, Duration.ofSeconds(10));
 		setup = new Setup(webDriver, wait);
+		setup.startServer();
 	}
 
 	@AfterAll
@@ -48,11 +48,11 @@ class ItemPageTest {
 	@Test
 	@Order(1)
 	void testItemHeaderAndTitle() throws InterruptedException {
-		ClickShop();
+		openShopPage();
 		List<WebElement> itemList = webDriver.findElements(By.className("Item_itemContainer__uYG6J"));
 		List<WebElement> products = new ArrayList<>();
 
-		for(int i = 1; i < itemList.size() + 1; i++) {
+		for (int i = 1; i < itemList.size() + 1; i++) {
 			//Locate xpath of next element in iteration
 			String xpath = String.format("/html/body/div/div/div[3]/div/div/div[2]/div[3]/div[%d]", i);
 			webDriver.findElement(By.xpath(xpath)).click();
@@ -68,12 +68,12 @@ class ItemPageTest {
 
 	@Test
 	@Order(2)
-	void testBid() throws InterruptedException{
-		ClickShop();
+	void testIfUserCanPlaceBid() throws InterruptedException{
+		openShopPage();
 		List<WebElement> itemList = webDriver.findElements(By.className("Item_itemContainer__uYG6J"));
 		List<WebElement> products = new ArrayList<>();
 
-		for(int i = 1; i < itemList.size() + 1; i++) {
+		for (int i = 1; i < itemList.size() + 1; i++) {
 			String xpath = String.format("/html/body/div/div/div[3]/div/div/div[2]/div[3]/div[%d]", i);
 			webDriver.findElement(By.xpath(xpath)).click();
 			Thread.sleep(1000);
@@ -83,7 +83,7 @@ class ItemPageTest {
 			Thread.sleep(1000);
 		}
 
-		ClickShop();
+		openShopPage();
 		WebElement login = webDriver.findElement(By.xpath("//*[@id=\"root\"]/div/div[1]/nav/p/a[1]"));
 		login.click();
 		Thread.sleep(1000);
@@ -94,7 +94,7 @@ class ItemPageTest {
 		password.sendKeys("123456789");
 		Thread.sleep(1000);
 
-		ClickShop();
+		openShopPage();
 		for(int i = 1; i < itemList.size() + 1; i++) {
 			String xpath = String.format("/html/body/div/div/div[3]/div/div/div[2]/div[3]/div[%d]", i);
 			webDriver.findElement(By.xpath(xpath)).click();
@@ -109,7 +109,7 @@ class ItemPageTest {
 	@Test
 	@Order(3)
 	void testBidPrices() throws InterruptedException{
-		ClickShop();
+		openShopPage();
 		List<WebElement> itemList = webDriver.findElements(By.className("Item_itemContainer__uYG6J"));
 		List<WebElement> products = new ArrayList<>();
 
@@ -120,14 +120,12 @@ class ItemPageTest {
 
 			Double startBid = Double.valueOf(Integer.parseInt(webDriver.findElement(By.xpath("//*[@id=\"root\"]/div/div[3]/div[2]/div/div[1]/div[2]/p/span")).getText().replaceAll("[^0-9]", "")));
 			Double highestBid = Double.valueOf(Integer.parseInt(webDriver.findElement(By.xpath("//*[@id=\"root\"]/div/div[3]/div[2]/div/div[1]/div[2]/div[1]/p[1]/span")).getText().replaceAll("[^0-9]", "")));
-			Double enterBid = Double.valueOf(Integer.parseInt(webDriver.findElement(By.cssSelector("input.ItemOverview_bidInput__3ic45")).getAttribute("value").replaceAll("[^0-9]", "")));
+			Double enterBid = Double.valueOf(Integer.parseInt(webDriver.findElement(By.cssSelector("input.ItemOverview_bidInput__3ic45")).getAttribute("value").replaceAll("[^0-9]", ""))); //should this be placeholder?
 			Boolean verifyStartBid;
 
-			if(enterBid > startBid && enterBid > highestBid){
+			if (enterBid > startBid && enterBid > highestBid) {
 				verifyStartBid = true;
-			}
-
-			else{
+			} else {
 				verifyStartBid = false;
 			}
 
@@ -140,7 +138,7 @@ class ItemPageTest {
 	@Test
 	@Order(4)
 	void testBiddingProcess() throws InterruptedException{
-		ClickShop();
+		openShopPage();
 		List<WebElement> itemList = webDriver.findElements(By.className("Item_itemContainer__uYG6J"));
 		List<WebElement> products = new ArrayList<>();
 
@@ -151,7 +149,7 @@ class ItemPageTest {
 
 			Double startBid = Double.valueOf(Integer.parseInt(webDriver.findElement(By.xpath("//*[@id=\"root\"]/div/div[3]/div[2]/div/div[1]/div[2]/p/span")).getText().replaceAll("[^0-9]", "")));
 			Double highestBid = Double.valueOf(Integer.parseInt(webDriver.findElement(By.xpath("//*[@id=\"root\"]/div/div[3]/div[2]/div/div[1]/div[2]/div[1]/p[1]/span")).getText().replaceAll("[^0-9]", "")));
-			Double valueToUse = GetBiggerDouble(startBid, highestBid);
+			Double valueToUse = getBiggerDouble(startBid, highestBid);
 			Double lesserBid = valueToUse - 0.1;
 			Double higherBid = valueToUse + 0.1;
 
@@ -176,17 +174,16 @@ class ItemPageTest {
 		}
 	}
 
-	void ClickShop(){
-		WebElement shopButton = webDriver.findElement(By.xpath("//*[@id=\"root\"]/div/div[2]/div/div[3]/a[2]"));
-		shopButton.click();
+	void openShopPage() throws InterruptedException {
+		WebElement shopLink = webDriver.findElement(By.xpath("//*[@id=\"root\"]/div/div[2]/div/div[3]/a[2]"));
+		shopLink.click();
+		Thread.sleep(2000);
 	}
 
-	Double GetBiggerDouble(Double a, Double b){
-		if(a > b){
+	Double getBiggerDouble(Double a, Double b) {
+		if(a > b) {
 			return a;
-		}
-
-		else{
+		} else {
 			return b;
 		}
 	}

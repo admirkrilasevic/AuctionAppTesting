@@ -1,7 +1,6 @@
 package test;
 
 import java.time.Duration;
-import java.util.Random;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -28,11 +27,12 @@ class LoginAndRegistrationTest {
 
 	@BeforeAll
 	static void setUpBeforeClass() throws Exception {
-		System.setProperty("webdriver.chrome.driver", "chromedriver.exe"); //C:\\Users\\yoga\\OneDrive\\Software Verification Validation and Testing\\
+		System.setProperty("webdriver.chrome.driver", "chromedriver.exe");
 		webDriver = new ChromeDriver();
 		webDriver.manage().window().maximize();
 		wait = new WebDriverWait(webDriver, Duration.ofSeconds(10));
 		setup = new Setup(webDriver, wait);
+		setup.startServer();
 	}
 
 	@AfterAll
@@ -148,6 +148,8 @@ class LoginAndRegistrationTest {
 		password.sendKeys("wrongpassword");
 		WebElement invalidEmailField = webDriver.findElement(By.xpath("//*[@id=\"root\"]/div/div[3]/div[2]/form/div[2]/div/div"));
 		assertEquals("This is not a valid email.", invalidEmailField.getText());
+		
+		//extend
 	}
 
 	@Test

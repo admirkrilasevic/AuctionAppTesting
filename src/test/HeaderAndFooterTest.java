@@ -52,24 +52,6 @@ class HeaderAndFooterTest {
 
 	@Test
 	void testHeaderLinks() throws InterruptedException {
-		WebElement facebookLink = webDriver.findElement(By.xpath("//*[@id=\"root\"]/div/div[1]/nav/div/ul/li[1]/a"));
-		facebookLink.click();
-		assertNotEquals("https://facebook.com", webDriver.getCurrentUrl());
-		
-		setup.startApplication();
-		
-		WebElement instagramLink = webDriver.findElement(By.xpath("//*[@id=\"root\"]/div/div[1]/nav/div/ul/li[2]/a"));
-		instagramLink.click();
-		assertNotEquals("https://instagram.com", webDriver.getCurrentUrl());
-		
-		setup.startApplication();
-		
-		WebElement twitterLink = webDriver.findElement(By.xpath("//*[@id=\"root\"]/div/div[1]/nav/div/ul/li[3]/a"));
-		twitterLink.click();
-		assertNotEquals("https://twitter.com", webDriver.getCurrentUrl());
-		
-		setup.startApplication();
-		
 		WebElement loginLink = webDriver.findElement(By.xpath("//*[@id=\"root\"]/div/div[1]/nav/p/a[1]"));
 		loginLink.click();
 		assertEquals("https://auctionapp.krilasevic.me/login", webDriver.getCurrentUrl());

@@ -164,6 +164,26 @@ class ItemPageTest {
 		}
 		doLogout();
 	}
+	
+	@Test
+	void testBreadcrumbs() throws InterruptedException {
+		Thread.sleep(2000);
+		WebElement homePageItem = webDriver.findElement(By.className("Item_itemContainer__uYG6J"));
+		homePageItem.click();
+		Thread.sleep(2000);
+		
+		WebElement previousPageInBreadcrumbs = webDriver.findElement(By.className("ItemOverview_breadcrumbsLink__1bkCB"));
+		assertEquals("Home", previousPageInBreadcrumbs.getText());
+		
+		openShopPage();
+		
+		WebElement shopPageItem = webDriver.findElement(By.className("Item_itemContainer__uYG6J"));
+		shopPageItem.click();
+		Thread.sleep(2000);
+		
+		previousPageInBreadcrumbs = webDriver.findElement(By.className("ItemOverview_breadcrumbsLink__1bkCB"));
+		assertEquals("Shop", previousPageInBreadcrumbs.getText());
+	}
 
 	void openShopPage() throws InterruptedException {
 		WebElement shopLink = webDriver.findElement(By.xpath("//*[@id=\"root\"]/div/div[2]/div/div[3]/a[2]"));

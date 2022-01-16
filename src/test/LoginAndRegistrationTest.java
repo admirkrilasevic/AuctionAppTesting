@@ -81,6 +81,7 @@ class LoginAndRegistrationTest {
 		WebElement password = webDriver.findElement(By.name("password"));
 		name.sendKeys("newName");
 		surname.sendKeys("newSurname");
+		//Change email before running the test - must be unique for every user
 		email.sendKeys("newName.newSurname.test@gmail.com");
 		password.sendKeys("123456789");
 		Thread.sleep(2000);
@@ -172,7 +173,7 @@ class LoginAndRegistrationTest {
 
 		WebElement email = webDriver.findElement(By.name("email"));
 		WebElement password = webDriver.findElement(By.name("password"));
-		email.sendKeys("matej@gmail.com");
+		email.sendKeys("matej.mujezinovic@gmail.com");
 		password.sendKeys("wrongpassword");
 		
 		WebElement loginButton = webDriver.findElement(By.xpath("//*[@id=\"root\"]/div/div[3]/div[2]/form/button"));

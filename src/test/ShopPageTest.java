@@ -52,6 +52,27 @@ class ShopPageTest {
 	@AfterEach
 	void tearDown() throws Exception {
 	}
+	
+	@Test
+	void testExploreMore() throws InterruptedException {
+		openShopPage();
+		
+		List<WebElement> listedItems = webDriver.findElements(By.className("Item_itemContainer__uYG6J"));
+		int noOfItemsBefore = listedItems.size();
+		
+		JavascriptExecutor js = (JavascriptExecutor) webDriver;
+		js.executeScript("window.scrollBy(0,500)", "");
+		Thread.sleep(2000);
+		
+		WebElement exploreMoreButton = webDriver.findElement(By.className("ShopPageItems_exploreMoreButton__1nQKr"));
+		exploreMoreButton.click();
+		Thread.sleep(2000);
+		
+		listedItems = webDriver.findElements(By.className("Item_itemContainer__uYG6J"));
+		int noOfItemsAfter = listedItems.size();
+		
+		assertTrue(noOfItemsBefore < noOfItemsAfter);
+	}
 
 	@Test
 	void testCategoryFilters() throws InterruptedException {
@@ -273,6 +294,11 @@ class ShopPageTest {
 		assertEquals(firstItemGridViewName, firstItemListViewName);
 		assertEquals(secondItemGridViewName, secondItemListViewName);
 		
+		WebElement description = firstItemListView.findElement(By.className("ListItem_description__3ZsnJ"));
+		WebElement bidButton = firstItemListView.findElement(By.className("ListItem_bidButton__3b21V"));
+		
+		assertTrue(description.isDisplayed());
+		assertTrue(bidButton.isDisplayed());
 	}
 	
 	void selectMultipleFilters() throws InterruptedException {

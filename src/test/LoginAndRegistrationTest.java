@@ -50,6 +50,23 @@ class LoginAndRegistrationTest {
 	@AfterEach
 	void tearDown() throws Exception {
 	}
+	
+	@Test
+	void testLoginLinkOnRegisterPage() throws InterruptedException {
+		WebElement register = webDriver.findElement(By.xpath("//*[@id=\"root\"]/div/div[1]/nav/p/a[2]"));
+		register.click();
+		Thread.sleep(2000);
+		
+		JavascriptExecutor js = (JavascriptExecutor) webDriver;
+		js.executeScript("window.scrollBy(0,500)", "");
+		Thread.sleep(2000);
+		
+		WebElement loginLink = webDriver.findElement(By.className("Forms_linkToLogin__VHCBU"));
+		loginLink.click();
+		Thread.sleep(2000);
+		
+		assertEquals("https://auctionapp.krilasevic.me/login", webDriver.getCurrentUrl());
+	}
 
 	@Test
 	void testRegisterSuccessful() throws InterruptedException {

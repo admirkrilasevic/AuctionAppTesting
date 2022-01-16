@@ -28,7 +28,8 @@ class HomePageTest {
 
 	@BeforeAll
 	static void setUpBeforeClass() throws Exception {
-		System.setProperty("webdriver.chrome.driver", "C:\\Users\\yoga\\OneDrive\\Software Verification Validation and Testing\\chromedriver.exe");
+		//Before running ensure that the Chrome driver is placed in root folder
+		System.setProperty("webdriver.chrome.driver", "chromedriver.exe");
 		webDriver = new ChromeDriver();
 		webDriver.manage().window().maximize();
 		wait = new WebDriverWait(webDriver, Duration.ofSeconds(10));
@@ -50,55 +51,55 @@ class HomePageTest {
 	void tearDown() throws Exception {
 	}
 
-//	@Test
-//	void testCategoriesSection() throws InterruptedException {
-//		Thread.sleep(2000);
-//		List<WebElement> categories = webDriver.findElements(By.className("CategoriesSection_categoryButton__2oY_0"));
-//		
-//		for (int i = 0; i < categories.size()-1; i++) {
-//			Thread.sleep(2000);
-//			
-//			List<WebElement> refreshedCategories = webDriver.findElements(By.className("CategoriesSection_categoryButton__2oY_0"));
-//			String categoryName = refreshedCategories.get(i).getText();
-//			refreshedCategories.get(i).click();
-//			
-//			Thread.sleep(2000);
-//			
-//			WebElement categoryActiveFilter = webDriver.findElement(By.xpath("/html/body/div/div/div[3]/div/div/div[2]/div[1]/div/div/button"));
-//			String categoryFilterName = categoryActiveFilter.getText().split(" ")[0];
-//			assertEquals(categoryName, categoryFilterName);
-//			
-//			webDriver.navigate().back();
-//		}
-//		
-//		Thread.sleep(2000);
-//		List<WebElement> refreshedCategories = webDriver.findElements(By.className("CategoriesSection_categoryButton__2oY_0"));
-//		refreshedCategories.get(refreshedCategories.size()-1).click();
-//		String allCategoriesUrl = webDriver.getCurrentUrl();
-//		
-//		WebElement shopLink = webDriver.findElement(By.xpath("//*[@id=\"root\"]/div/div[2]/div/div[3]/a[2]"));
-//		shopLink.click();
-//		String shopUrl = webDriver.getCurrentUrl();
-//		
-//		assertEquals(shopUrl, allCategoriesUrl);
-//	}
-//	
-//	@Test
-//	void testTabSwitching() {
-//		WebElement newArrivalsTab = webDriver.findElement(By.xpath("//*[@id=\"root\"]/div/div[3]/div[2]/div/ol/li[1]"));
-//		WebElement lastChanceTab = webDriver.findElement(By.xpath("//*[@id=\"root\"]/div/div[3]/div[2]/div/ol/li[2]"));
-//		
-//		assertEquals("tab-list-item tab-list-active", newArrivalsTab.getAttribute("class"));
-//		
-//		lastChanceTab.click();
-//		lastChanceTab = webDriver.findElement(By.xpath("//*[@id=\"root\"]/div/div[3]/div[2]/div/ol/li[2]"));
-//		assertEquals("tab-list-item tab-list-active", lastChanceTab.getAttribute("class"));
-//		
-//		newArrivalsTab.click();
-//		newArrivalsTab = webDriver.findElement(By.xpath("//*[@id=\"root\"]/div/div[3]/div[2]/div/ol/li[1]"));
-//		assertEquals("tab-list-item tab-list-active", newArrivalsTab.getAttribute("class"));
-//		
-//	}
+	@Test
+	void testCategoriesSection() throws InterruptedException {
+		Thread.sleep(2000);
+		List<WebElement> categories = webDriver.findElements(By.className("CategoriesSection_categoryButton__2oY_0"));
+		
+		for (int i = 0; i < categories.size()-1; i++) {
+			Thread.sleep(2000);
+			
+			List<WebElement> refreshedCategories = webDriver.findElements(By.className("CategoriesSection_categoryButton__2oY_0"));
+			String categoryName = refreshedCategories.get(i).getText();
+			refreshedCategories.get(i).click();
+			
+			Thread.sleep(2000);
+			
+			WebElement categoryActiveFilter = webDriver.findElement(By.xpath("/html/body/div/div/div[3]/div/div/div[2]/div[1]/div/div/button"));
+			String categoryFilterName = categoryActiveFilter.getText().split(" ")[0];
+			assertEquals(categoryName, categoryFilterName);
+			
+			webDriver.navigate().back();
+		}
+		
+		Thread.sleep(2000);
+		List<WebElement> refreshedCategories = webDriver.findElements(By.className("CategoriesSection_categoryButton__2oY_0"));
+		refreshedCategories.get(refreshedCategories.size()-1).click();
+		String allCategoriesUrl = webDriver.getCurrentUrl();
+		
+		WebElement shopLink = webDriver.findElement(By.xpath("//*[@id=\"root\"]/div/div[2]/div/div[3]/a[2]"));
+		shopLink.click();
+		String shopUrl = webDriver.getCurrentUrl();
+		
+		assertEquals(shopUrl, allCategoriesUrl);
+	}
+	
+	@Test
+	void testTabSwitching() {
+		WebElement newArrivalsTab = webDriver.findElement(By.xpath("//*[@id=\"root\"]/div/div[3]/div[2]/div/ol/li[1]"));
+		WebElement lastChanceTab = webDriver.findElement(By.xpath("//*[@id=\"root\"]/div/div[3]/div[2]/div/ol/li[2]"));
+		
+		assertEquals("tab-list-item tab-list-active", newArrivalsTab.getAttribute("class"));
+		
+		lastChanceTab.click();
+		lastChanceTab = webDriver.findElement(By.xpath("//*[@id=\"root\"]/div/div[3]/div[2]/div/ol/li[2]"));
+		assertEquals("tab-list-item tab-list-active", lastChanceTab.getAttribute("class"));
+		
+		newArrivalsTab.click();
+		newArrivalsTab = webDriver.findElement(By.xpath("//*[@id=\"root\"]/div/div[3]/div[2]/div/ol/li[1]"));
+		assertEquals("tab-list-item tab-list-active", newArrivalsTab.getAttribute("class"));
+		
+	}
 	
 	@Test
 	void testNewArrivals() throws InterruptedException {

@@ -27,6 +27,7 @@ class HeaderAndFooterTest {
 
 	@BeforeAll
 	static void setUpBeforeClass() throws Exception {
+		//Before running ensure that the Chrome driver is placed in root folder
 		System.setProperty("webdriver.chrome.driver", "chromedriver.exe");
 		webDriver = new ChromeDriver();
 		webDriver.manage().window().maximize();

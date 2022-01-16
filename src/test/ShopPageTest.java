@@ -31,7 +31,8 @@ class ShopPageTest {
 
 	@BeforeAll
 	static void setUpBeforeClass() throws Exception {
-		System.setProperty("webdriver.chrome.driver", "C:\\Users\\yoga\\OneDrive\\Software Verification Validation and Testing\\chromedriver.exe");
+		//Before running ensure that the Chrome driver is placed in root folder
+		System.setProperty("webdriver.chrome.driver", "chromedriver.exe");
 		webDriver = new ChromeDriver();
 		webDriver.manage().window().maximize();
 		wait = new WebDriverWait(webDriver, Duration.ofSeconds(10));

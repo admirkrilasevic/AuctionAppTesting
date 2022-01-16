@@ -130,10 +130,13 @@ class ItemPageTest {
 		openShopPage();
 		List<WebElement> itemList = webDriver.findElements(By.className("Item_itemContainer__uYG6J"));
 
-		for(int i = 1; i < itemList.size() + 1; i++) {
+		for(int i = 1; i < 2; i++) {
 			String xpath = String.format("/html/body/div/div/div[3]/div/div/div[2]/div[3]/div[%d]", i);
 			webDriver.findElement(By.xpath(xpath)).click();
 			Thread.sleep(3000);
+			
+			int noOfBids = Integer.parseInt(webDriver.findElement(By.xpath("//*[@id=\"root\"]/div/div[3]/div[2]/div/div/div[2]/div[1]/p[2]/span")).getText());
+			
 
 			Double startBid = Double.parseDouble(webDriver.findElement(By.xpath("//*[@id=\"root\"]/div/div[3]/div[2]/div/div[1]/div[2]/p/span")).getText().substring(1));
 			Double highestBid = Double.parseDouble(webDriver.findElement(By.xpath("//*[@id=\"root\"]/div/div[3]/div[2]/div/div[1]/div[2]/div[1]/p[1]/span")).getText().substring(1));
@@ -150,6 +153,8 @@ class ItemPageTest {
 
 			WebElement failAlert = webDriver.findElement(By.xpath("//*[@id=\"root\"]/div/div[3]/div[2]"));
 			assertEquals("There are higher bids than yours. You could give a second try!", failAlert.getText());
+			int noOfBidsAfterFail = Integer.parseInt(webDriver.findElement(By.xpath("//*[@id=\"root\"]/div/div[3]/div[3]/div/div[1]/div[2]/div[1]/p[2]/span")).getText());
+			assertEquals(noOfBids, noOfBidsAfterFail);
 			Thread.sleep(3000);
 			
 			bidPlaceholder.clear();
@@ -159,6 +164,13 @@ class ItemPageTest {
 
 			WebElement alertSuccess = webDriver.findElement(By.xpath("//*[@id=\"root\"]/div/div[3]/div[2]"));
 			assertEquals("Congrats! You are the highest bidder!", alertSuccess.getText());
+			
+			highestBid = Double.parseDouble(webDriver.findElement(By.xpath("//*[@id=\"root\"]/div/div[3]/div[3]/div/div[1]/div[2]/div[1]/p[1]/span")).getText().substring(1));
+			int noOfBidsAfterSuccess = Integer.parseInt(webDriver.findElement(By.xpath("//*[@id=\"root\"]/div/div[3]/div[3]/div/div[1]/div[2]/div[1]/p[2]/span")).getText());
+			assertEquals(highestBid, higherBid);
+			assertEquals(noOfBids + 1, noOfBidsAfterSuccess);
+			
+			
 			webDriver.navigate().back();
 			Thread.sleep(1000);
 		}
